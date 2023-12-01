@@ -1,0 +1,67 @@
+#include <iostream>
+#include <cmath>
+#include <string>
+using namespace std;
+const double airDensity = 0.0765; // Air density set to sea level
+const double cl = 1;
+
+double calcDownforce(double wingArea, double speed) {
+    return (0.5 * airDensity * pow(speed, 2) * wingArea * cl) / 6;
+}
+
+int main() {
+    string wingTypes[] = {"STI", "GT4", "997 GT3", "Viper"};
+    double wingAreas[] = {3, 4.8, 5, 7.69};
+    double speeds[3];
+    double downforces[3];
+    double totalDownforce = 0;
+    int type;
+
+    cout << "Select the type of wing:\n";
+    for (int i = 0; i < 4; ++i) {
+        cout << "(" << i + 1 << ") " << wingTypes[i] << "\n";
+    }
+    cout << "(5) Custom\n";
+    cout << "Enter your choice: ";
+    cin >> type;
+
+    if (type >= 1 && type <= 4) {
+        double wingArea = wingAreas[type - 1];
+        for (int i = 0; i < 3; ++i) {
+            cout << "Enter speed " << i + 1 << " in mph: ";
+            cin >> speeds[i];
+            downforces[i] = calcDownforce(wingArea, speeds[i]);
+            totalDownforce += downforces[i];
+        }
+
+        cout << "\nDownforces at respective speeds for " << wingTypes[type - 1] << " wing:\n";
+        for (int i = 0; i < 3; ++i) {
+            cout << "At " << speeds[i] << " mph: " << downforces[i] << " lbs\n";
+        }
+
+        double averageDownforce = totalDownforce / 3;
+        cout << "\nAverage downforce: " << averageDownforce << " lbs";
+    } else if (type == 5) {
+        double area;
+        cout << "Enter the total area of the custom wing(sq. ft.): ";
+        cin >> area;
+        for (int i = 0; i < 3; ++i) {
+            cout << "Enter speed " << i + 1 << " in mph: ";
+            cin >> speeds[i];
+            downforces[i] = calcDownforce(area, speeds[i]);
+            totalDownforce += downforces[i];
+        }
+
+        cout << "\nDownforces at respective speeds for custom wing:\n";
+        for (int i = 0; i < 3; ++i) {
+            cout << "At " << speeds[i] << " mph: " << downforces[i] << " lbs\n";
+        }
+
+        double averageDownforce = totalDownforce / 3;
+        cout << "\nAverage downforce: " << averageDownforce << " lbs";
+    } else {
+        cout << "Invalid choice";
+    }
+
+    return 0;
+}
